@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ DANGER - Ultimate Guild Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Exo+2:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff4444;
+            --primary-dark: #cc0000;
+            --secondary: #1a1a2e;
+            --accent: #ffaa00;
+            --background: #0f0f23;
+            --card-bg: rgba(26, 26, 46, 0.9);
+            --text: #ffffff;
+            --text-muted: #b0b0b0;
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --error: #ff4444;
+            --glass: rgba(255, 255, 255, 0.1);
+            --neon-glow: 0 0 10px rgba(255, 68, 68, 0.7), 0 0 20px rgba(255, 68, 68, 0.5), 0 0 30px rgba(255, 68, 68, 0.3);
+        }
+
+        [data-theme="light"] {
+            --primary: #007bff;
+            --primary-dark: #0056b3;
+            --secondary: #f8f9fa;
+            --accent: #17a2b8;
+            --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text: #2d3748;
+            --text-muted: #4a5568;
+            --success: #28a745;
+            --warning: #ffc107;
+            --error: #dc3545;
+            --glass: rgba(255, 255, 255, 0.2);
+            --neon-glow: 0 0 20px rgba(0, 123, 255, 0.5);
+        }
+
+        [data-theme="red"] {
+            --primary: #dc3545;
+            --primary-dark: #c82333;
+            --secondary: #2d0000;
+            --accent: #ff6b6b;
+            --background: #1a0000;
+            --card-bg: rgba(45, 0, 0, 0.9);
+            --text: #ffffff;
+            --text-muted: #ff9999;
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --error: #ff4444;
+            --glass: rgba(255, 0, 0, 0.1);
+            --neon-glow: 0 0 10px rgba(220, 53, 69, 0.7), 0 0 20px rgba(220, 53, 69, 0.5);
+        }
+
+        [data-theme="blue"] {
+            --primary: #007bff;
+            --primary-dark: #0056b3;
+            --secondary: #001f3f;
+            --accent: #7fdbff;
+            --background: #001529;
+            --card-bg: rgba(0, 31, 63, 0.9);
+            --text: #ffffff;
+            --text-muted: #7fdbff;
+            --success: #2ecc40;
+            --warning: #ffdc00;
+            --error: #ff4136;
+            --glass: rgba(0, 123, 255, 0.1);
+            --neon-glow: 0 0 10px rgba(0, 123, 255, 0.7), 0 0 20px rgba(0, 123, 255, 0.5);
+        }
+
+        [data-theme="green"] {
+            --primary: #28a745;
+            --primary-dark: #1e7e34;
+            --secondary: #004d00;
+            --accent: #00ff88;
+            --background: #001a00;
+            --card-bg: rgba(0, 77, 0, 0.9);
+            --text: #ffffff;
+            --text-muted: #99ff99;
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --error: #ff4444;
+            --glass: rgba(40, 167, 69, 0.1);
+            --neon-glow: 0 0 10px rgba(40, 167, 69, 0.7), 0 0 20px rgba(40, 167, 69, 0.5);
+        }
+
+        [data-theme="purple"] {
+            --primary: #6f42c1;
+            --primary-dark: #5a2d91;
+            --secondary: #2d1b69;
+            --accent: #b19cd9;
+            --background: #1a103d;
+            --card-bg: rgba(45, 27, 105, 0.9);
+            --text: #ffffff;
+            --text-muted: #b19cd9;
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --error: #ff4444;
+            --glass: rgba(111, 66, 193, 0.1);
+            --neon-glow: 0 0 10px rgba(111, 66, 193, 0.7), 0 0 20px rgba(111, 66, 193, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rajdhani', 'Exo 2', sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Video Background */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            opacity: 0.15;
+            filter: brightness(0.3) contrast(1.2);
+        }
+
+        /* Dark Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: -1;
+        }
+
+        /* Particles Container */
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .theme-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid var(--glass);
+        }
+
+        .theme-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid var(--text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--neon-glow);
+        }
+
+        .theme-btn:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 15px currentColor;
+        }
+
+        .theme-btn[data-theme="dark"] { background: linear-gradient(135deg, #0a0a0a, #2d2d2d); }
+        .theme-btn[data-theme="light"] { background: linear-gradient(135deg, #ffffff, #f0f0f0); }
+        .theme-btn[data-theme="red"] { background: linear-gradient(135deg, #dc3545, #ff6b6b); }
+        .theme-btn[data-theme="blue"] { background: linear-gradient(135deg, #007bff, #7fdbff); }
+        .theme-btn[data-theme="green"] { background: linear-gradient(135deg, #28a745, #00ff88); }
+        .theme-btn[data-theme="purple"] { background: linear-gradient(135deg, #6f42c1, #b19cd9); }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 30px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            margin-bottom: 30px;
+            border: 1px solid var(--glass);
+            box-shadow: var(--neon-glow);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--primary), var(--accent), var(--primary));
+            border-radius: 25px;
+            z-index: -1;
+            animation: borderGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes borderGlow {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .brand {
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            text-shadow: 0 0 30px rgba(255, 68, 68, 0.5);
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .tagline {
+            color: var(--text-muted);
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            font-weight: 300;
+            letter-spacing: 1.5px;
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        .main-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            background: var(--glass);
+            padding: 15px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .main-tab-btn {
+            flex: 1;
+            padding: 18px 25px;
+            background: transparent;
+            border: 2px solid transparent;
+            border-radius: 15px;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .main-tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: var(--neon-glow);
+        }
+
+        .main-tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .main-tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 25px;
+            padding: 35px;
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--glass), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--neon-glow), 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--glass);
+        }
+
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            font-size: 2rem;
+            box-shadow: var(--neon-glow);
+        }
+
+        .card-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text);
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 1.1rem;
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 18px 20px;
+            background: var(--glass);
+            border: 2px solid var(--glass);
+            border-radius: 15px;
+            color: var(--text);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 500;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(255, 68, 68, 0.3);
+            transform: scale(1.02);
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .auth-tabs::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .auth-tabs::-webkit-scrollbar-track {
+            background: var(--glass);
+            border-radius: 10px;
+        }
+
+        .auth-tabs::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .auth-tab-btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 15px;
+            background: var(--glass);
+            border: 2px solid var(--glass);
+            border-radius: 12px;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .auth-tab-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: var(--neon-glow);
+        }
+
+        .auth-tab-content {
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .auth-tab-content.active {
+            display: block;
+        }
+
+        .btn {
+            padding: 18px 35px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-family: 'Orbitron', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 8px 20px rgba(255, 68, 68, 0.4);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            transform: translateY(-3px);
+            box-shadow: var(--neon-glow);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            box-shadow: 0 8px 20px rgba(46, 204, 113, 0.4);
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(46, 204, 113, 0.7);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+            box-shadow: 0 8px 20px rgba(230, 126, 34, 0.4);
+        }
+
+        .btn-warning:hover {
+            background: linear-gradient(135deg, #d35400, #e67e22);
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(230, 126, 34, 0.7);
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 50px;
+            color: var(--text-muted);
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--glass);
+            border-left: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 25px;
+            box-shadow: var(--neon-glow);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 25px;
+            border-radius: 20px;
+            background: var(--glass);
+            border: 2px solid var(--glass);
+            display: none;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result.success {
+            border-color: var(--success);
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .result.error {
+            border-color: var(--error);
+            background: rgba(255, 68, 68, 0.1);
+        }
+
+        .result-content {
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .guild-info-display {
+            max-height: 700px;
+            overflow-y: auto;
+            padding-right: 15px;
+        }
+
+        .guild-info-display::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .guild-info-display::-webkit-scrollbar-track {
+            background: var(--glass);
+            border-radius: 10px;
+        }
+
+        .guild-info-display::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(255, 68, 68, 0.2);
+        }
+
+        .info-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent);
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .player-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .player-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+
+        .player-name {
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text);
+            font-size: 1.1rem;
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        .player-details {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .feature-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            box-shadow: var(--neon-glow);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* API Endpoints Section */
+        .api-section {
+            margin-top: 40px;
+        }
+
+        .api-card {
+            background: var(--card-bg);
+            border-radius: 25px;
+            padding: 30px;
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            margin-bottom: 25px;
+        }
+
+        .api-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 20px;
+            font-family: 'Orbitron', sans-serif;
+            border-bottom: 2px solid var(--glass);
+            padding-bottom: 15px;
+        }
+
+        .endpoint-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 15px;
+        }
+
+        .endpoint-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 18px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .endpoint-item:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent);
+            box-shadow: 0 8px 25px rgba(255, 170, 0, 0.2);
+        }
+
+        .endpoint-method {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .method-get {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+        }
+
+        .method-post {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+        }
+
+        .endpoint-url {
+            font-family: 'Courier New', monospace;
+            color: var(--text);
+            font-size: 0.95rem;
+            word-break: break-all;
+            margin-bottom: 8px;
+        }
+
+        .endpoint-desc {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* Credits Section */
+        .credits-section {
+            margin-top: 30px;
+            text-align: center;
+            padding: 40px 30px;
+            background: var(--glass);
+            border-radius: 25px;
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass);
+        }
+
+        .credits-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 25px;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+        }
+
+        .credits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .credit-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .credit-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(255, 68, 68, 0.2);
+        }
+
+        .credit-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.8rem;
+            box-shadow: var(--neon-glow);
+        }
+
+        .credit-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
+            font-family: 'Exo 2', sans-serif;
+        }
+
+        .credit-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .credit-link:hover {
+            color: var(--primary);
+            transform: scale(1.05);
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 25px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--glass);
+        }
+
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 1024px) {
+            .brand {
+                font-size: 3.2rem;
+            }
+            
+            .card {
+                padding: 25px;
+            }
+            
+            .card-title {
+                font-size: 1.8rem;
+            }
+            
+            .info-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            
+            .endpoint-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .brand {
+                font-size: 2.5rem;
+                letter-spacing: 2px;
+            }
+            
+            .tagline {
+                font-size: 1.1rem;
+            }
+            
+            .main-tabs {
+                flex-direction: column;
+            }
+            
+            .main-tab-btn {
+                padding: 15px;
+                font-size: 1rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .card-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+                margin-right: 15px;
+            }
+            
+            .card-title {
+                font-size: 1.5rem;
+            }
+            
+            .btn {
+                padding: 16px 25px;
+                font-size: 1rem;
+            }
+            
+            .btn-group {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .theme-selector {
+                top: 10px;
+                right: 10px;
+                padding: 8px;
+                gap: 8px;
+            }
+            
+            .theme-btn {
+                width: 25px;
+                height: 25px;
+            }
+            
+            .credits-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .api-card {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .brand {
+                font-size: 2rem;
+            }
+            
+            .tagline {
+                font-size: 1rem;
+            }
+            
+            .header {
+                padding: 25px 20px;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            .card-title {
+                font-size: 1.3rem;
+            }
+            
+            .form-input, .form-select {
+                padding: 15px;
+                font-size: 1rem;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .players-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Video Background -->
+    <video class="video-background" autoplay muted loop playsinline>
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-geometric-particles-2-36939-large.mp4" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+    
+    <!-- Particles Container -->
+    <div id="particles-js"></div>
+
+    <div class="theme-selector">
+        <div class="theme-btn" data-theme="dark" title="Dark Theme"></div>
+        <div class="theme-btn" data-theme="light" title="Light Theme"></div>
+        <div class="theme-btn" data-theme="red" title="Red Theme"></div>
+        <div class="theme-btn" data-theme="blue" title="Blue Theme"></div>
+        <div class="theme-btn" data-theme="green" title="Green Theme"></div>
+        <div class="theme-btn" data-theme="purple" title="Purple Theme"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="brand">⚡ DANGER GUILD MANAGER</div>
+            <div class="tagline">Ultimate Free Fire Guild Information & Management System</div>
+        </div>
+
+        <!-- Main Tabs -->
+        <div class="main-tabs">
+            <button class="main-tab-btn active" data-tab="info">
+                🏆 GUILD INFORMATION
+            </button>
+            <button class="main-tab-btn" data-tab="management">
+                ⚔️ GUILD MANAGEMENT
+            </button>
+        </div>
+
+        <!-- Guild Information Tab -->
+        <div class="main-tab-content active" id="infoTab">
+            <div class="card">
+                <div class="feature-badge pulse">LIVE</div>
+                <div class="card-header">
+                    <div class="card-icon">🔍</div>
+                    <div class="card-title">SEARCH GUILD INFORMATION</div>
+                </div>
+                
+                <form id="guildInfoForm">
+                    <div class="form-group">
+                        <label class="form-label" for="guildId">Guild ID</label>
+                        <input type="text" class="form-input" id="guildId" placeholder="Enter Guild ID (e.g., 1234567)" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="region">Region</label>
+                        <select class="form-select" id="region" required>
+                            <option value="">Select Region</option>
+                            <option value="IND">IND (India)</option>
+                            <option value="BR">BR (Brazil)</option>
+                            <option value="US">US (United States)</option>
+                            <option value="NA">NA (North America)</option>
+                            <option value="SAC">SAC (South America)</option>
+                            <option value="BD">BD (Bangladesh)</option>
+                            <option value="VN">VN (Vietnam)</option>
+                            <option value="ME">ME (Middle East)</option>
+                            <option value="SG">SG (Singapore)</option>
+                            <option value="PK">PK (Pakistan)</option>
+                            <option value="ID">ID (Indonesia)</option>
+                            <option value="TH">TH (Thailand)</option>
+                            <option value="TW">TW (Taiwan)</option>
+                            <option value="EU">EU (Europe)</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <span>🔍 SEARCH GUILD</span>
+                    </button>
+                </form>
+
+                <div class="loading" id="infoLoading">
+                    <div class="spinner"></div>
+                    <div>Fetching guild information...</div>
+                </div>
+                
+                <div class="result" id="infoResult">
+                    <div class="result-content"></div>
+                </div>
+            </div>
+
+            <!-- Guild Info Display Card -->
+            <div class="card" id="guildDisplayCard" style="display: none;">
+                <div class="feature-badge">DETAILS</div>
+                <div class="card-header">
+                    <div class="card-icon">📊</div>
+                    <div class="card-title">GUILD DETAILS</div>
+                </div>
+                
+                <div class="guild-info-display" id="guildInfoDisplay">
+                    <!-- Guild info will be displayed here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Guild Management Tab -->
+        <div class="main-tab-content" id="managementTab">
+            <div class="card">
+                <div class="feature-badge pulse">LIVE</div>
+                <div class="card-header">
+                    <div class="card-icon">⚔️</div>
+                    <div class="card-title">GUILD JOIN / LEAVE</div>
+                </div>
+                
+                <!-- Authentication Tabs -->
+                <div class="auth-tabs">
+                    <div class="auth-tab-btn active" data-auth-tab="guest">Guest Login</div>
+                    <div class="auth-tab-btn" data-auth-tab="jwt">JWT Token</div>
+                    <div class="auth-tab-btn" data-auth-tab="eat">EAT Token</div>
+                    <div class="auth-tab-btn" data-auth-tab="access">Access Token</div>
+                </div>
+
+                <!-- Guest Auth -->
+                <div class="auth-tab-content active" id="guestAuth">
+                    <form id="guestAuthForm">
+                        <div class="form-group">
+                            <label class="form-label" for="guestUid">Guest UID</label>
+                            <input type="text" class="form-input" id="guestUid" placeholder="Enter your guest UID" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="guestPassword">Guest Password</label>
+                            <input type="password" class="form-input" id="guestPassword" placeholder="Enter your guest password" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="guildIdAction">Guild ID</label>
+                            <input type="text" class="form-input" id="guildIdAction" placeholder="Enter Guild ID to join/leave" required>
+                        </div>
+                        
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-success" id="joinBtnGuest">
+                                <span>➕ JOIN GUILD</span>
+                            </button>
+                            <button type="button" class="btn btn-warning" id="leaveBtnGuest">
+                                <span>➖ LEAVE GUILD</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- JWT Auth -->
+                <div class="auth-tab-content" id="jwtAuth">
+                    <form id="jwtAuthForm">
+                        <div class="form-group">
+                            <label class="form-label" for="jwtToken">JWT Token</label>
+                            <input type="text" class="form-input" id="jwtToken" placeholder="Enter your JWT token (eyJ...)" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="guildIdJwt">Guild ID</label>
+                            <input type="text" class="form-input" id="guildIdJwt" placeholder="Enter Guild ID to join/leave" required>
+                        </div>
+                        
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-success" id="joinBtnJwt">
+                                <span>🔑 JOIN WITH JWT</span>
+                            </button>
+                            <button type="button" class="btn btn-warning" id="leaveBtnJwt">
+                                <span>🔑 LEAVE WITH JWT</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- EAT Auth -->
+                <div class="auth-tab-content" id="eatAuth">
+                    <form id="eatAuthForm">
+                        <div class="form-group">
+                            <label class="form-label" for="eatToken">EAT Token</label>
+                            <input type="text" class="form-input" id="eatToken" placeholder="Enter your EAT token" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="guildIdEat">Guild ID</label>
+                            <input type="text" class="form-input" id="guildIdEat" placeholder="Enter Guild ID to join/leave" required>
+                        </div>
+                        
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-success" id="joinBtnEat">
+                                <span>🎫 JOIN WITH EAT</span>
+                            </button>
+                            <button type="button" class="btn btn-warning" id="leaveBtnEat">
+                                <span>🎫 LEAVE WITH EAT</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Access Token Auth -->
+                <div class="auth-tab-content" id="accessAuth">
+                    <form id="accessAuthForm">
+                        <div class="form-group">
+                            <label class="form-label" for="accessToken">Access Token</label>
+                            <input type="text" class="form-input" id="accessToken" placeholder="Enter your Access token" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="guildIdAccess">Guild ID</label>
+                            <input type="text" class="form-input" id="guildIdAccess" placeholder="Enter Guild ID to join/leave" required>
+                        </div>
+                        
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-success" id="joinBtnAccess">
+                                <span>🔓 JOIN WITH ACCESS</span>
+                            </button>
+                            <button type="button" class="btn btn-warning" id="leaveBtnAccess">
+                                <span>🔓 LEAVE WITH ACCESS</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="loading" id="manageLoading">
+                    <div class="spinner"></div>
+                    <div>Processing your request...</div>
+                </div>
+                
+                <div class="result" id="manageResult">
+                    <div class="result-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Endpoints Section -->
+        <div class="api-section">
+            <div class="api-card">
+                <div class="api-title">📡 API ENDPOINTS</div>
+                <div class="endpoint-list">
+                    <div class="endpoint-item">
+                        <div class="endpoint-method method-get">GET</div>
+                        <div class="endpoint-url">https://guild-info-danger.vercel.app/guild?guild_id=1234567®ion=IND</div>
+                        <div class="endpoint-desc">Get detailed information about any guild by ID and region.</div>
+                    </div>
+                    
+                    <div class="endpoint-item">
+                        <div class="endpoint-method method-get">GET</div>
+                        <div class="endpoint-url">https://guild-info-danger.vercel.app/join?guild_id=1234567&uid=GUEST_UID&password=GUEST_PASS</div>
+                        <div class="endpoint-desc">Join a guild using guest credentials (UID & Password).</div>
+                    </div>
+                    
+                    <div class="endpoint-item">
+                        <div class="endpoint-method method-get">GET</div>
+                        <div class="endpoint-url">https://guild-info-danger.vercel.app/join?guild_id=1234567&token=JWT_TOKEN</div>
+                        <div class="endpoint-desc">Join a guild using JWT token authentication.</div>
+                    </div>
+                    
+                    <div class="endpoint-item">
+                        <div class="endpoint-method method-get">GET</div>
+                        <div class="endpoint-url">https://guild-info-danger.vercel.app/join?guild_id=1234567&eat_token=EAT_TOKEN</div>
+                        <div class="endpoint-desc">Join a guild using EAT token (from help.garena.com).</div>
+                    </div>
+                    
+                    <div class="endpoint-item">
+                        <div class="endpoint-method method-get">GET</div>
+                        <div class="endpoint-url">https://guild-info-danger.vercel.app/join?guild_id=1234567&access_token=ACCESS_TOKEN</div>
+                        <div class="endpoint-desc">Join a guild using Access token authentication.</div>
+                    </div>
+                    
+                    <div class="endpoint-item">
+                        <div class="endpoint-method method-get">GET</div>
+                        <div class="endpoint-url">https://guild-info-danger.vercel.app/leave?guild_id=1234567&token=JWT_TOKEN</div>
+                        <div class="endpoint-desc">Leave a guild using JWT token authentication.</div>
+                    </div>
+                    
+                    <div class="endpoint-item">
+                        <div class="endpoint-method method-get">GET</div>
+                        <div class="endpoint-url">https://guild-info-danger.vercel.app/health</div>
+                        <div class="endpoint-desc">Health check endpoint to verify API status.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Credits Section -->
+        <div class="credits-section">
+            <div class="credits-title">💎 CREDITS</div>
+            <div class="credits-grid">
+                <div class="credit-card">
+                    <div class="credit-icon">👨‍💻</div>
+                    <div class="credit-name">Developer</div>
+                    <div>DANGER FF</div>
+                    <a href="https://t.me/danger_ff_like" target="_blank" class="credit-link">
+                        t.me/danger_ff_like
+                    </a>
+                </div>
+                
+                <div class="credit-card">
+                    <div class="credit-icon">🔧</div>
+                    <div class="credit-name">Free APIs Channel</div>
+                    <div>For Free Fire APIs</div>
+                    <a href="https://t.me/dangerfreeapis" target="_blank" class="credit-link">
+                        t.me/dangerfreeapis
+                    </a>
+                </div>
+                
+                <div class="credit-card">
+                    <div class="credit-icon">📢</div>
+                    <div class="credit-name">Main Channel</div>
+                    <div>Updates & Announcements</div>
+                    <a href="https://t.me/freefirelikesdanger" target="_blank" class="credit-link">
+                        t.me/freefirelikesdanger
+                    </a>
+                </div>
+                
+                <div class="credit-card">
+                    <div class="credit-icon">🚀</div>
+                    <div class="credit-name">API Server</div>
+                    <div>Powered by Vercel</div>
+                    <a href="https://guild-info-danger.vercel.app" target="_blank" class="credit-link">
+                        guild-info-danger.vercel.app
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <p>⚡ Developed with ❤️ by <a href="https://t.me/danger_ff_like" target="_blank">DANGER</a> | 
+                Version 3.0 | Ultimate Guild Management System</p>
+                <p style="margin-top: 10px; font-size: 0.8rem;">
+                    This tool is for educational purposes only. Use at your own risk.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Particles.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    
+    <script>
+        // API Base URL
+        const API_BASE_URL = 'https://guild-info-danger.vercel.app';
+
+        // Initialize Particles.js
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS('particles-js', {
+                particles: {
+                    number: {
+                        value: 80,
+                        density: {
+                            enable: true,
+                            value_area: 800
+                        }
+                    },
+                    color: {
+                        value: "#ff4444"
+                    },
+                    shape: {
+                        type: "circle",
+                        stroke: {
+                            width: 0,
+                            color: "#000000"
+                        }
+                    },
+                    opacity: {
+                        value: 0.5,
+                        random: true,
+                        anim: {
+                            enable: true,
+                            speed: 1,
+                            opacity_min: 0.1,
+                            sync: false
+                        }
+                    },
+                    size: {
+                        value: 3,
+                        random: true,
+                        anim: {
+                            enable: true,
+                            speed: 2,
+                            size_min: 0.1,
+                            sync: false
+                        }
+                    },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: "#ffaa00",
+                        opacity: 0.4,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: "none",
+                        random: true,
+                        straight: false,
+                        out_mode: "out",
+                        bounce: false,
+                        attract: {
+                            enable: false,
+                            rotateX: 600,
+                            rotateY: 1200
+                        }
+                    }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: {
+                        onhover: {
+                            enable: true,
+                            mode: "grab"
+                        },
+                        onclick: {
+                            enable: true,
+                            mode: "push"
+                        },
+                        resize: true
+                    },
+                    modes: {
+                        grab: {
+                            distance: 140,
+                            line_linked: {
+                                opacity: 1
+                            }
+                        },
+                        push: {
+                            particles_nb: 4
+                        }
+                    }
+                },
+                retina_detect: true
+            });
+        });
+
+        // Theme Switching
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const theme = this.getAttribute('data-theme');
+                document.body.setAttribute('data-theme', theme);
+                localStorage.setItem('guild-theme', theme);
+            });
+        });
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('guild-theme') || 'dark';
+        document.body.setAttribute('data-theme', savedTheme);
+
+        // Main Tab Switching
+        document.querySelectorAll('.main-tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                document.querySelectorAll('.main-tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                document.querySelectorAll('.main-tab-content').forEach(content => content.classList.remove('active'));
+                document.getElementById(tabId + 'Tab').classList.add('active');
+                
+                // Clear results
+                document.getElementById('infoResult').style.display = 'none';
+                document.getElementById('manageResult').style.display = 'none';
+            });
+        });
+
+        // Auth Tab Switching
+        document.querySelectorAll('.auth-tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const authTabId = this.getAttribute('data-auth-tab');
+                
+                // Update active auth tab button
+                this.closest('.auth-tabs').querySelectorAll('.auth-tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Update active auth tab content
+                document.querySelectorAll('.auth-tab-content').forEach(content => content.classList.remove('active'));
+                document.getElementById(authTabId + 'Auth').classList.add('active');
+            });
+        });
+
+        // Guild Info Form Submission
+        document.getElementById('guildInfoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const guildId = document.getElementById('guildId').value.trim();
+            const region = document.getElementById('region').value;
+            
+            if (!guildId || !region) {
+                showResult('infoResult', '❌ Please enter both Guild ID and Region', 'error');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('infoLoading').style.display = 'block';
+            document.getElementById('infoResult').style.display = 'none';
+            document.getElementById('guildDisplayCard').style.display = 'none';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/guild?guild_id=${guildId}&region=${region}`);
+                const data = await response.json();
+                
+                document.getElementById('infoLoading').style.display = 'none';
+                
+                if (data.status === 'success' || data.success) {
+                    displayGuildInfo(data);
+                    showResult('infoResult', '✅ Guild information fetched successfully!', 'success');
+                } else {
+                    showResult('infoResult', `❌ ERROR: ${data.error || 'Failed to fetch guild info'}`, 'error');
+                }
+                
+            } catch (error) {
+                document.getElementById('infoLoading').style.display = 'none';
+                showResult('infoResult', `🌐 NETWORK ERROR!
+
+Failed to connect to API server.
+Error: ${error.message}
+
+Make sure:
+1. You're connected to the internet
+2. The API server is running
+3. No CORS restrictions are blocking the request`, 'error');
+            }
+        });
+
+        // Helper function for guild actions
+        async function handleGuildAction(actionType, authType) {
+            const loadingElement = document.getElementById('manageLoading');
+            const resultElement = document.getElementById('manageResult');
+            
+            let uid, password, token, eat_token, access_token, guildId;
+            
+            // Get values based on auth type
+            const authContents = {
+                'guest': {
+                    uid: () => document.getElementById('guestUid').value.trim(),
+                    password: () => document.getElementById('guestPassword').value.trim(),
+                    guildId: () => document.getElementById('guildIdAction').value.trim()
+                },
+                'jwt': {
+                    token: () => document.getElementById('jwtToken').value.trim(),
+                    guildId: () => document.getElementById('guildIdJwt').value.trim()
+                },
+                'eat': {
+                    eat_token: () => document.getElementById('eatToken').value.trim(),
+                    guildId: () => document.getElementById('guildIdEat').value.trim()
+                },
+                'access': {
+                    access_token: () => document.getElementById('accessToken').value.trim(),
+                    guildId: () => document.getElementById('guildIdAccess').value.trim()
+                }
+            };
+            
+            const values = authContents[authType];
+            guildId = values.guildId();
+            
+            // Validation
+            if (!guildId) {
+                showResult('manageResult', '❌ Guild ID is required', 'error');
+                return;
+            }
+            
+            // Build params
+            const params = new URLSearchParams();
+            params.append('guild_id', guildId);
+            
+            if (authType === 'guest') {
+                uid = values.uid();
+                password = values.password();
+                
+                if (!uid || !password) {
+                    showResult('manageResult', '❌ Guest UID and Password are required', 'error');
+                    return;
+                }
+                params.append('uid', uid);
+                params.append('password', password);
+            } 
+            else if (authType === 'jwt') {
+                token = values.token();
+                if (!token) {
+                    showResult('manageResult', '❌ JWT Token is required', 'error');
+                    return;
+                }
+                params.append('token', token);
+            }
+            else if (authType === 'eat') {
+                eat_token = values.eat_token();
+                if (!eat_token) {
+                    showResult('manageResult', '❌ EAT Token is required', 'error');
+                    return;
+                }
+                params.append('eat_token', eat_token);
+            }
+            else if (authType === 'access') {
+                access_token = values.access_token();
+                if (!access_token) {
+                    showResult('manageResult', '❌ Access Token is required', 'error');
+                    return;
+                }
+                params.append('access_token', access_token);
+            }
+
+            // Show loading
+            loadingElement.style.display = 'block';
+            resultElement.style.display = 'none';
+            
+            try {
+                const endpoint = actionType === 'join' ? '/join' : '/leave';
+                const response = await fetch(`${API_BASE_URL}${endpoint}?${params}`);
+                const data = await response.json();
+                
+                // Hide loading
+                loadingElement.style.display = 'none';
+                
+                if (data.success) {
+                    let successMessage = `✅ SUCCESS!
+
+${data.message}
+
+Guild: ${data.clan_name || guildId}
+Region: ${data.region || 'Auto-detected'}`;
+                    
+                    if (data.raw_response) {
+                        successMessage += `
+
+📊 Raw Response:
+${JSON.stringify(data.raw_response, null, 2)}`;
+                    }
+                    
+                    showResult('manageResult', successMessage, 'success');
+                } else {
+                    let errorMessage = `❌ FAILED!
+
+Error: ${data.error || 'Unknown error'}
+Message: ${data.message || 'No message'}`;
+                    
+                    if (data.raw_response) {
+                        errorMessage += `
+
+📊 Raw Response:
+${JSON.stringify(data.raw_response, null, 2)}`;
+                    }
+                    
+                    if (data.http_status) {
+                        errorMessage += `
+HTTP Status: ${data.http_status}`;
+                    }
+                    
+                    showResult('manageResult', errorMessage, 'error');
+                }
+                
+            } catch (error) {
+                loadingElement.style.display = 'none';
+                showResult('manageResult', `🌐 NETWORK ERROR!
+
+Failed to connect to API server.
+Error: ${error.message}
+
+API URL: ${API_BASE_URL}
+Please check:
+1. API server status
+2. Your internet connection
+3. CORS permissions`, 'error');
+            }
+        }
+
+        // Event listeners for guild actions
+        document.getElementById('joinBtnGuest').addEventListener('click', () => handleGuildAction('join', 'guest'));
+        document.getElementById('leaveBtnGuest').addEventListener('click', () => handleGuildAction('leave', 'guest'));
+        
+        document.getElementById('joinBtnJwt').addEventListener('click', () => handleGuildAction('join', 'jwt'));
+        document.getElementById('leaveBtnJwt').addEventListener('click', () => handleGuildAction('leave', 'jwt'));
+        
+        document.getElementById('joinBtnEat').addEventListener('click', () => handleGuildAction('join', 'eat'));
+        document.getElementById('leaveBtnEat').addEventListener('click', () => handleGuildAction('leave', 'eat'));
+        
+        document.getElementById('joinBtnAccess').addEventListener('click', () => handleGuildAction('join', 'access'));
+        document.getElementById('leaveBtnAccess').addEventListener('click', () => handleGuildAction('leave', 'access'));
+
+        // Helper function to show results
+        function showResult(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            const content = element.querySelector('.result-content');
+            
+            content.textContent = message;
+            element.className = 'result ' + type;
+            element.style.display = 'block';
+            
+            // Scroll to result
+            element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Display guild information
+        function displayGuildInfo(data) {
+            const displayCard = document.getElementById('guildDisplayCard');
+            const displayContent = document.getElementById('guildInfoDisplay');
+            
+            // Handle different API response formats
+            const guildData = data.data || data;
+            
+            let html = `
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-label">Guild Name</div>
+                        <div class="info-value">${guildData.guild_name || guildData.name || 'N/A'}</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">Guild ID</div>
+                        <div class="info-value">${guildData.guild_id || guildData.id || 'N/A'}</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">Region</div>
+                        <div class="info-value">${guildData.guild_region || guildData.region || 'N/A'}</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">Level</div>
+                        <div class="info-value">${guildData.guild_level || guildData.level || 'N/A'}</div>
+                    </div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-label">Members</div>
+                        <div class="info-value">${guildData.current_members || guildData.members || 'N/A'}/${guildData.max_members || 'N/A'}</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">Total Activity</div>
+                        <div class="info-value">${guildData.total_activity_points || guildData.total_activity || 'N/A'}</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">Weekly Activity</div>
+                        <div class="info-value">${guildData.weekly_activity_points || guildData.weekly_activity || 'N/A'}</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">Created</div>
+                        <div class="info-value">${guildData.creation_time || guildData.created_at || 'N/A'}</div>
+                    </div>
+                </div>
+            `;
+
+            if (guildData.guild_slogan && guildData.guild_slogan !== 'N/A') {
+                html += `
+                    <div class="info-card" style="grid-column: 1 / -1; margin-top: 20px;">
+                        <div class="info-label">Guild Slogan</div>
+                        <div style="color: var(--text); font-size: 1.2rem; font-style: italic; margin-top: 10px;">"${guildData.guild_slogan}"</div>
+                    </div>
+                `;
+            }
+
+            // Display leader info if available
+            if (guildData.guild_leader || guildData.leader) {
+                const leader = guildData.guild_leader || guildData.leader;
+                html += `
+                    <div style="margin-top: 30px;">
+                        <div style="color: var(--accent); font-size: 1.4rem; margin-bottom: 20px; font-weight: 700; border-bottom: 2px solid var(--glass); padding-bottom: 10px;">
+                            👑 Guild Leader
+                        </div>
+                        <div class="players-grid">
+                            <div class="player-card">
+                                <div class="player-name">${leader.name || 'Unknown'}</div>
+                                <div class="player-details">
+                                    ${leader.uid ? `UID: ${leader.uid}<br>` : ''}
+                                    ${leader.level ? `Level: ${leader.level}<br>` : ''}
+                                    ${leader.likes ? `Likes: ${leader.likes}` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Display officers if available
+            if (guildData.officers && guildData.officers.length > 0) {
+                html += `
+                    <div style="margin-top: 30px;">
+                        <div style="color: var(--accent); font-size: 1.4rem; margin-bottom: 20px; font-weight: 700; border-bottom: 2px solid var(--glass); padding-bottom: 10px;">
+                            ⭐ Guild Officers (${guildData.officers.length})
+                        </div>
+                        <div class="players-grid">
+                `;
+                
+                guildData.officers.forEach(officer => {
+                    html += `
+                        <div class="player-card">
+                            <div class="player-name">${officer.name || 'Unknown'}</div>
+                            <div class="player-details">
+                                ${officer.uid ? `UID: ${officer.uid}<br>` : ''}
+                                ${officer.level ? `Level: ${officer.level}<br>` : ''}
+                                ${officer.likes ? `Likes: ${officer.likes}` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `</div></div>`;
+            }
+
+            // Display members if available
+            if (guildData.members_list && guildData.members_list.length > 0) {
+                const memberCount = guildData.members_list.length;
+                html += `
+                    <div style="margin-top: 30px;">
+                        <div style="color: var(--accent); font-size: 1.4rem; margin-bottom: 20px; font-weight: 700; border-bottom: 2px solid var(--glass); padding-bottom: 10px;">
+                            👥 Guild Members (${memberCount})
+                        </div>
+                        <div class="players-grid">
+                `;
+                
+                // Show first 20 members to avoid too much data
+                const membersToShow = guildData.members_list.slice(0, 20);
+                membersToShow.forEach(member => {
+                    html += `
+                        <div class="player-card">
+                            <div class="player-name">${member.name || 'Unknown'}</div>
+                            <div class="player-details">
+                                ${member.uid ? `UID: ${member.uid}<br>` : ''}
+                                ${member.level ? `Level: ${member.level}<br>` : ''}
+                                ${member.role ? `Role: ${member.role}<br>` : ''}
+                                ${member.join_date ? `Joined: ${member.join_date}` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                if (memberCount > 20) {
+                    html += `
+                        <div class="player-card" style="text-align: center; grid-column: 1 / -1;">
+                            <div class="player-name">And ${memberCount - 20} more members...</div>
+                        </div>
+                    `;
+                }
+                
+                html += `</div></div>`;
+            }
+
+            // Display raw JSON data for debugging
+            html += `
+                <div style="margin-top: 30px;">
+                    <div style="color: var(--accent); font-size: 1.4rem; margin-bottom: 20px; font-weight: 700; border-bottom: 2px solid var(--glass); padding-bottom: 10px;">
+                        📊 Raw API Response
+                    </div>
+                    <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; font-family: monospace; font-size: 0.8rem; overflow-x: auto;">
+                        ${JSON.stringify(data, null, 2)}
+                    </div>
+                </div>
+            `;
+
+            displayContent.innerHTML = html;
+            displayCard.style.display = 'block';
+            displayCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Enter key support
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const activeTab = document.querySelector('.main-tab-content.active');
+                if (activeTab.id === 'infoTab') {
+                    document.getElementById('guildInfoForm').dispatchEvent(new Event('submit'));
+                }
+            }
+        });
+
+        // Test API connection on load
+        window.addEventListener('load', async () => {
+            try {
+                const healthCheck = await fetch(`${API_BASE_URL}/health`);
+                if (healthCheck.ok) {
+                    console.log('✅ API Server is online');
+                } else {
+                    console.warn('⚠️ API Server might be having issues');
+                }
+            } catch (error) {
+                console.error('❌ Cannot connect to API Server:', error);
+            }
+        });
+
+        // Auto-fill for testing (optional)
+        setTimeout(() => {
+            // You can pre-fill test values here if needed
+            // Example: document.getElementById('guildId').value = '1234567';
+        }, 1000);
+    </script>
+</body>
+</html>
